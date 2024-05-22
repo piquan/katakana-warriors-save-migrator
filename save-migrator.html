@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<!--
+    Katakana War Save Migrator: Copyright (c) 2024 Joel Ray Holveck
+
+    One-off to load save games from the file-based version of the
+    Katakana War game into its web-based version.
+ -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link rel="license" href="#license">
+  <title>Katakana War Save Migrator</title>
+</head>
+<body>
+  <main class="container">
+    <h1>Katakana War Save Migrator</h1>
+
+    <p>Welcome to the Katakana War Save Migrator, a tool designed to
+    facilitate transferring save files between the standalone
+    application and an alternative web-based version of
+    the <a href="https://store.steampowered.com/app/554600/Learn_Japanese_To_Survive_Katakana_War/">“Learn Japanese To Survive! Katakana War”</a>
+    game. This utility helps navigate around technical issues
+    encountered in the standalone version by making use of the game’s
+    inherent web compatibility.</p>
+
+    <p><b>Important Disclaimer:</b> This utility operates
+    independently and is not endorsed by Sleepy Duck or River Crow
+    Studio, the game’s developers. For official game-related
+    merchandise or to support the creators, please
+    visit <a href="https://study-japanese.net/">study-japanese.net</a>.</p>
+
+    <p><b>Background on Game Versions:</b> “Learn Japanese To Survive!
+    Katakana War” is primarily a standalone game. Although it operates
+    mainly as a desktop application, its architecture is based on web
+    technologies, housing a “www” subdirectory that can function
+    directly in web browsers. This setup isn’t a separate web version
+    per se but rather the same application accessed through a browser
+    via a local server. This method is not officially documented or
+    supported but is entirely feasible. It does, however, manage its
+    save games differently than the standalone mode.</p>
+
+    <p><b>Why This Utility Exists:</b> Sometimes the standalone
+    version of the game works great, but other times you might run
+    into weird glitches or issues, especially if your system setup is
+    a bit unusual. If you find the game runs smoother in your web
+    browser, or if you just prefer playing there, this tool makes it
+    easier to move your save files back and forth. It’s handy for
+    keeping your game going, no matter where you choose to play.</p>
+
+    <ol>
+      <li><b>Back Up Your Game Data:</b> Before proceeding, ensure you
+        back up your game data to avoid any accidental
+        loss. <a href="https://help.steampowered.com/en/faqs/view/4593-5CB7-DC3C-64F0">Here’s
+          how to back up your game.</a> This Save Migrator utility has not
+        been extensively tested and could potentially affect your saves
+        or the app itself.</li>
+
+      <li><b>Prepare the Utility:</b> Download this utility and place
+        the file in the app’s <code>www</code> directory. For example,
+        the path might be <code>~/.steam/steamapps/common/Learn Japanese
+          To Survive! Katakana War/www/save-migrator.html</code>.</li>
+
+      <li><b>Set Up the Server:</b>
+        <ol>
+          <li>Open a terminal window.</li>
+          <li>Change the directory to where you’ve placed the file, using <code>cd ~/.steam/steamapps/common/Learn Japanese To Survive! Katakana War/www</code></li>
+          <li>Start a local server by running: <code>python3 -m http.server -b localhost</code></li>
+        </ol>
+      </li>
+
+      <li><b>Access the Utility:</b> Open your web browser and go
+        to <code><a href="http://localhost:8000/save-migrator.html">http://localhost:8000/save-migrator.html</a></code>
+        to access the utility.  The game normally uses Chromium
+        internally, so you may want to use Chrome.</li>
+
+      <li><b>Perform the File Transfer:</b> Follow the detailed
+        instructions in the sections below to transfer your save files
+        between the standalone application and the web-based version,
+        depending on your needs.</li>
+
+      <li><b>Play the Game (Optional):</b> If you wish to play the
+        game in the web browser, navigate
+        to <a href="http://localhost:8000/">http://localhost:8000/</a>
+        while the Python server is still running. Note: Modern browsers
+        require a server to run such applications due to security
+        restrictions.</li>
+
+      <li><b>Finish Up:</b> Once you have completed transferring your
+        saves and playing the game, you can terminate the
+        server. Return to your command line and
+        press <kbd>Control-C</kbd> to stop the Python server.</li>
+    </ol>
+
+    <h2>Copy local app to web app</h2>
+
+    <p>This section explains how to transfer all your save files from
+      the standalone application (the one you run from Steam) to the web
+      version. Currently, it is not possible to transfer individual
+      saves; this process will move all saves.</p>
+
+    <ol>
+      <li><b>Check the Run Log:</b> Before you proceed, review the Run
+        Log to see which saves are detected and will be
+        transferred. If you have not used the web version yet, the Run
+        Log may be empty, indicating there are no saves to
+        overwrite.</li>
+      <li><b>Initiate Transfer:</b> Click the “Run” button to start
+        transferring your saves. This process will overwrite existing
+        saves in the web app with those from your local application.</li>
+      <li><b>Verify Transfer:</b> After the transfer completes, check
+        the Run Log again to ensure there were no errors during the
+        process. It’s normal for some save slots to be reported as not
+        found if you haven’t used all available save slots in the
+        game.</li>
+    </ol>
+
+    <button id="run" disabled>Run</button>
+    <div style="border: 1px solid black">
+      <h3>Run log:</h3>
+      <pre id="log" ></pre>
+    </div>
+
+    <h2>Download web app files to the local app</h2>
+    <p>This section guides you through downloading your save files
+      from the web version and saving them locally, effectively
+      overwriting your existing Steam saves.</p>
+
+    <ol>
+      <li><b>Identify Files to Download:</b> Review the list of files
+        displayed. These are your saves from the web app. If you haven’t
+        played the web version, there may be no files listed.</li>
+
+      <li><b>Download and Save Locally:</b> Click to download each
+        file listed. Once downloaded, move them to your game’s save
+        directory. For example, the path would
+        be <code>~/.steam/steamapps/common/Learn Japanese To Survive!
+          Katakana War/www/save/</code> by default. This action will
+        overwrite any existing saves in this directory with the ones
+        from the web app.</li>
+    </ol>
+    <ul id="downloads"></ul>
+  </main>
+
+  <hr>
+  <footer class="footer text-muted" style="font-size:0.8em" id="license">
+    <p>Copyright &copy; 2024 Joel Ray Holveck</p>
+
+    <p>This program, <em>Katakana War Save Migrator</em>, is solely the
+      creation of <a href="https://github.com/piquan">Joel Ray
+      Holveck</a>. It is not affiliated with, endorsed by, or approved
+      by Sleepy Duck and River Crow Studio, nor is it connected in any
+      way with the employers of Holveck.</p>
+
+    <p>Permission is hereby granted, free of charge, to any person
+      obtaining a copy of this software and associated documentation
+      files (the "Software"), to deal in the Software without
+      restriction, including without limitation the rights to use,
+      copy, modify, merge, publish, distribute, sublicense, and/or
+      sell copies of the Software, and to permit persons to whom the
+      Software is furnished to do so, subject to the following
+      conditions:</p>
+
+    <p>The above copyright notice and this permission notice shall be
+      included in all copies or substantial portions of the
+      Software.</p>
+
+    <p>THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+      EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+      OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+      NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+      HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+      WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+      FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+      OTHER DEALINGS IN THE SOFTWARE.</p>
+  </footer>
+
+  <script>
+    function log(content) {
+        console.log(content);
+        document.getElementById('log').textContent += `${content}\n`;
+    }
+
+    async function fetchSave(filename, ok, notfound) {
+        try {
+            const response = await fetch(`./save/${filename}`, {mode: "cors"});
+            if (response.ok) {
+                const content = await response.text();
+                await ok(content);
+            } else if (response.status === 404) {
+                await notfound();
+            } else {
+                log(`Error fetching ${filename}: ${response.status} ${response.statusText}`);
+                // Log the response to the dev console for
+                // careful inspection.
+                console.error(response);
+            }
+        } catch (error) {
+            log(`Cannot fetch ${filename}: ${error}`);
+            console.error(error);
+        }
+    }
+
+    async function forEachFile(callback) {
+        for (let i = 1; i <= 20; i++) {
+            await callback(`file${i}.rpgsave`, `RPG ${i} Config`);
+        }
+        await callback('global.rpgsave', 'RPG Learn Japanese To Survive! Katakana War Global');
+        await callback('config.rpgsave', 'RPG Learn Japanese To Survive! Katakana War Config');
+    }
+
+    async function populateDownloadList() {
+        const downloadList = document.getElementById('downloads');
+        downloadList.innerHTML = '';
+
+        await forEachFile(async (filename, key) => {
+            const content = localStorage.getItem(key);
+            if (content === null)
+                return;
+            const anchor = document.createElement('a');
+            anchor.innerText = key;
+            anchor.download = filename;
+            // The content is stored, in both the localStorage and the
+            // app's file, as a base64-encoded blob.  However, it uses
+            // '+' as one of its characters.  So, while there's no point
+            // in base64-encoding it, we do need to URI-escape it.
+            anchor.href = `data:,${encodeURIComponent(content)}`;
+            const li = document.createElement('li');
+            li.appendChild(anchor);
+            downloadList.appendChild(li);
+        });
+    }
+
+    async function loadRPGSaves() {
+        document.getElementById('log').innerHTML = '';
+        await forEachFile(async (filename, key) => {
+            await fetchSave(filename, async content => {
+                localStorage.setItem(key, content);
+                log(`File ${filename} saved into ${key}.`);
+            }, async () => {
+                log(`File ${filename} not found; skipping.`);
+            })
+        });
+        await populateDownloadList();
+    }
+
+    async function checkRPGSaves() {
+        await forEachFile(async (filename, key) => {
+            await fetchSave(filename, async content => {
+                if (localStorage.getItem(key) !== null) {
+                    log(`Will overwrite ${key} with ${filename}.`);
+                }
+            }, async () => {});
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        populateDownloadList();
+        await checkRPGSaves();
+        const runButton = document.getElementById('run');
+        runButton.addEventListener('click', () => loadRPGSaves());
+        runButton.disabled = false;
+    });
+  </script>
+</body>
+</html>
